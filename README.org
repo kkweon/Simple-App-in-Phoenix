@@ -1,0 +1,273 @@
+* Phoenix Basic CRUD Application                                   :TOC_3_GH:
+  - [[#basic-phoenix-workflow][Basic Phoenix Workflow]]
+    - [[#migrations][Migrations]]
+    - [[#model][Model]]
+    - [[#router-setup][Router setup]]
+    - [[#controller][Controller]]
+    - [[#view][View]]
+    - [[#etc][ETC]]
+
+** Basic Phoenix Workflow
+
+1. Migrations
+2. Models
+3. Router
+4. Controller
+5. View
+6. Templates
+
+*** Migrations
+
+**** Generate migrations
+#+BEGIN_SRC bash :exports code
+mix ecto.gen.migration add_XXX
+mix ecto.gen.migration create_XXX
+#+END_SRC
+
+The migrations files are generated into
+  #+BEGIN_SRC bash :exports both :results output
+  priv/repo/migrations
+  #+END_SRC
+
+  #+RESULTS:
+  : priv/repo/migrations
+  : ├── 20171002132113_add_topics.exs
+  : ├── 20171002183207_add_users.exs
+  : ├── 20171002195213_add_user_id_to_topics.exs
+  : └── 20171002210038_add_comments.exs
+  :
+  : 0 directories, 4 files
+
+**** Complete migrations
+  #+BEGIN_SRC elixir :exports code
+  defmodule Discuss.Repo.Migrations.AddTopics do
+    use Ecto.Migration
+
+    def change do
+      create table(:topics) do
+        add :title, :string
+      end
+    end
+  end
+  #+END_SRC
+
+**** Migrate
+#+BEGIN_SRC bash :exports code
+mix ecto.migrate
+#+END_SRC
+
+*** Model
+**** Example =web/models/topic.ex=
+     #+BEGIN_SRC elixir :exports code
+     defmodule Discuss.Topic do
+       use Discuss.Web, :model
+
+       schema "topics" do
+         field :title, :string
+         belongs_to :user, Discuss.User
+         has_many :comments, Discuss.Comment
+       end
+
+       def changeset(struct, params \\ %{}) do
+         struct
+         |> cast(params, [:title])
+         |> validate_required([:title])
+       end
+     end
+     #+END_SRC
+
+*** Router setup
+**** Example =router.ex=
+   #+BEGIN_SRC elixir :exports code
+     @doc """
+     Main Router setup
+     """
+     scope "/", Discuss do
+       pipe_through :browser # Use the default browser stack
+
+       # get "/", TopicController, :index
+       # get "/topics/new", TopicController, :new
+       # post "/topics", TopicController, :create
+       # get "/topics/:id/edit", TopicController, :edit
+       # put "/topics/:id", TopicController, :update
+       resources "/", TopicController # Setup RESTful ROUTES
+     end
+   #+END_SRC
+
+**** phx.routes
+   #+BEGIN_SRC bash :exports both :results output
+   mix phx.routes
+   #+END_SRC
+
+   #+RESULTS:
+   #+begin_example
+   topic_path  GET     /                         Discuss.TopicController :index
+   topic_path  GET     /:id/edit                 Discuss.TopicController :edit
+   topic_path  GET     /new                      Discuss.TopicController :new
+   topic_path  GET     /:id                      Discuss.TopicController :show
+   topic_path  POST    /                         Discuss.TopicController :create
+   topic_path  PATCH   /:id                      Discuss.TopicController :update
+               PUT     /:id                      Discuss.TopicController :update
+   topic_path  DELETE  /:id                      Discuss.TopicController :delete
+    auth_path  GET     /auth/signout             Discuss.AuthController :signout
+    auth_path  GET     /auth/:provider           Discuss.AuthController :request
+    auth_path  GET     /auth/:provider/callback  Discuss.AuthController :callback
+
+   #+end_example
+
+*** Controller
+
+**** Necessary Functions
+    #+BEGIN_SRC elixir :exports code
+      def index(conn, _params) do
+      def show(conn, %{"id" => topic_id}) do
+      def new(conn, _params) do
+      def create(conn, %{"topic" => topic}) do
+      def edit(conn, %{"id" => topic_id}) do
+      def update(conn, %{"id" => topic_id, "topic" => topic}) do
+      def delete(conn, %{"id" => topic_id}) do
+    #+END_SRC
+
+**** Example file
+
+     #+BEGIN_SRC elixir :exports code
+     defmodule Discuss.TopicController do
+       use Discuss.Web, :controller
+
+       alias Discuss.Topic
+       plug Discuss.Plugs.RequireAuth when action in [
+         :new, :create, :edit, :update, :delete
+       ]
+       plug :check_topic_owner when action in [:update, :edit, :delete]
+
+       def index(conn, _params) do
+         topics = Repo.all(Topic)
+         render conn, "index.html", topics: topics
+       end
+
+       def show(conn, %{"id" => topic_id}) do
+         topic = Repo.get!(Topic, topic_id)
+         render conn, "show.html", topic: topic
+       end
+
+       def new(conn, _params) do
+         changeset = Topic.changeset(%Topic{}, %{})
+         render conn, "new.html", changeset: changeset
+       end
+
+
+       def create(conn, %{"topic" => topic}) do
+         changeset =
+           conn.assigns.user
+           |> build_assoc(:topics)
+           |> Topic.changeset(topic)
+
+         case Repo.insert(changeset) do
+
+           {:ok, _topic} ->
+             conn
+             |> put_flash(:info, "Topic Created")
+             |> redirect(to: topic_path(conn, :index))
+
+           {:error, changeset} ->
+             render conn, "new.html", changeset: changeset
+
+         end
+       end
+
+       def edit(conn, %{"id" => topic_id}) do
+         topic = Repo.get(Topic, topic_id)
+         changeset = Topic.changeset(topic)
+
+         render conn, "edit.html", changeset: changeset, topic: topic
+       end
+
+       def update(conn, %{"id" => topic_id, "topic" => topic}) do
+         old_topic = Repo.get(Topic, topic_id)
+         changeset = Topic.changeset(old_topic, topic)
+
+         case Repo.update(changeset) do
+           {:ok, _topic} ->
+             conn
+             |> put_flash(:info, "Topic updated")
+             |> redirect(to: topic_path(conn, :index))
+
+           {:error, changeset} ->
+             render conn, "edit.html", changeset: changeset, topic: old_topic
+         end
+       end
+
+       def delete(conn, %{"id" => topic_id}) do
+         Repo.get!(Topic, topic_id)
+         |> Repo.delete!
+
+         conn
+         |> put_flash(:info, "Topic deleted")
+         |> redirect(to: topic_path(conn, :index))
+       end
+
+       def check_topic_owner(conn, _params) do
+         %{params: %{"id" => topic_id}} = conn
+         if Repo.get(Topic, topic_id).user_id == conn.assigns.user.id do
+           conn
+         else
+           conn
+           |> put_flash(:error, "You cannot edit")
+           |> redirect(to: topic_path(conn, :index))
+           |> halt()
+         end
+       end
+     end
+     #+END_SRC
+
+
+*** View
+If the viewname is =TopicView=, it searches =templates/topic/*.html.eex=
+
+**** Template example
+#+BEGIN_SRC html
+<h5>Topics</h5>
+
+<ul class="collection">
+    <%= for topic <- @topics do %>
+
+        <li class="collection-item">
+            <%= link topic.title, to: topic_path(@conn, :show, topic) %>
+
+            <%= if @conn.assigns[:user] && @conn.assigns.user.id == topic.user_id do %>
+            <div class="right">
+                <%= link "Edit", to: topic_path(@conn, :edit, topic) %>
+                <%= link "Delete", to: topic_path(@conn, :delete, topic), method: :delete %>
+            </div>
+            <% end %>
+        </li>
+
+    <% end %>
+</ul>
+
+<div class="fixed-action-btn">
+    <%= link to: topic_path(@conn, :new), class: "btn-floating btn-large waves-effect waves-light red" do %>
+        <i class="material-icons">add</i>
+    <% end %>
+    </a>
+</div>
+#+END_SRC
+
+**** Form example
+#+BEGIN_SRC html
+<%= form_for @changeset, topic_path(@conn, :create), fn f -> %>
+<div class="form-group">
+    <%= text_input f, :title, placeholder: "Title", class: "form-control" %>
+    <%= error_tag f, :title %>
+</div>
+
+<%= submit "Save Topic", class: "btn btn-primary" %>
+<% end %>
+#+END_SRC
+
+*** ETC
+- filename :: lower case and underbar
+- modulename :: CamelCase
+- =import= :: Copy source codes
+- =alias= :: Save keystrokes
+- =use= :: Import some predefined libraries (like macro)

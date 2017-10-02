@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Hello Discuss!</title>
+        <!-- Compiled and minified CSS -->
+
+        <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    </head>
+
+
+    <body>
+        <nav class="light-blue">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">
+                    Discussions
+                </a>
+                <ul class="right">
+                    <%= if @conn.assigns[:user] do %>
+                        <li>
+                            <%= link "Sign Out", to: auth_path(@conn, :signout) %>
+                            Logout
+                        </li>
+                    <% else %>
+                        <li>
+                            <%= link "Sign in with GitHub", to: auth_path(@conn, :request, "github") %>
+                        </li>
+                    <% end %>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+
+            <p class="alert alert-info" role="alert">
+                <%= get_flash(@conn, :info) %>
+            </p>
+            <p class="alert alert-danger" role="alert">
+                <%= get_flash(@conn, :error) %>
+            </p>
+
+            <main role="main">
+                <%= render @view_module, @view_template, assigns %>
+            </main>
+
+        </div>
+        <!-- /container -->
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    </body>
+
+</html>

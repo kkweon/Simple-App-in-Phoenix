@@ -1,0 +1,15 @@
+/* This file is for your main application css. */
+body {
+    font-size: 18px;
+}
+
+.help-block {
+    color: red;
+    text-transform: capitalize;
+    margin-top: 10px;
+}
+
+
+.form-group{
+    margin-bottom: 25px;
+}
