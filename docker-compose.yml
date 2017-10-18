@@ -1,28 +1,23 @@
 version: "3.1"
-
 services:
   web:
-    build: .
-    image: reproduce
+    image: kkweon/phoenix:latest
     ports:
       - "4000:4000"
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_NAME: todo_dev
+      DB_TEST_NAME: todo_test
       DB_HOST: db
     volumes:
       - .:/code
     depends_on:
       - db
-
     command: ["mix", "phx.server"]
-
   db:
     image: postgres:10.0
     volumes:
       - db-data:/var/lib/postgresql/data
-
-
 volumes:
   db-data:

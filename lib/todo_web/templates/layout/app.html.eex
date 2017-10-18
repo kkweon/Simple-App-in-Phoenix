@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <title>Hello Todo!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-  </head>
+        <title>Todo Application</title>
+        <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    </head>
 
-  <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+    <body>
+        <div class="container">
+            <header class="header">
+                <nav role="navbar navbar-default navigation">
+                    <ul class="nav navbar-nav pull-right">
+                        <%= if @conn.assigns[:user] do %>
+                            <li>
+                                <a href="<%= page_path(@conn, :index) %>">Main</a>
+                            </li>
+                            <li>
+                                <a href="<%= item_path(@conn, :index) %>">Todo</a>
+                            </li>
+                            <li>
+                                <a href="<%= user_path(@conn, :logout) %>">Logout</a>
+                            </li>
+                        <% else %>
+                            <li>
+                                <a href="<%= user_path(@conn, :new) %>">Register</a>
+                            </li>
+                            <li>
+                                <a href="<%= user_path(@conn, :login) %>">Login</a>
+                            </li>
+                        <% end %>
+                    </ul>
+                </nav>
+            </header>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
+            <main role="main" id="main">
+                <%= render @view_module, @view_template, assigns %>
+            </main>
 
-    </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-  </body>
+        </div> <!-- /container -->
+        <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    </body>
 </html>

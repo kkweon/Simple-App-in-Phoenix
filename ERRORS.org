@@ -1,5 +1,0 @@
-* Reproduce
-
-#+BEGIN_SRC bash
-docker-compose run web ecto.create
-#+END_SRC
