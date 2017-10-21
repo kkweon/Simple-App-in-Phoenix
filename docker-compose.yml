@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  web:
+    image: kkweon/phoenix:latest
+    ports:
+      - "4000:4000"
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: mango_dev
+      DB_TEST_NAME: mango_test
+      DB_HOST: db
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    command: ["mix", "phx.server"]
+  db:
+    image: postgres:10.0
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
