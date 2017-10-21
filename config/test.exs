@@ -4,7 +4,10 @@ use Mix.Config
 # you can enable the server option below.
 config :mango, MangoWeb.Endpoint,
   http: [port: 4001],
-  server: false
+  # Needed to test the server
+  server: true
+
+config :hound, driver: "phantomjs", host: (System.get_env("PHANTOMJS_HOST") || "localhost"), port: 8910
 
 # Print only warnings and errors during test
 config :logger, level: :warn
