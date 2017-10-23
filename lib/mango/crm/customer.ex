@@ -4,14 +4,13 @@ defmodule Mango.CRM.Customer do
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
   alias Mango.CRM.Customer
 
-
   schema "customers" do
-    field :email, :string
-    field :name, :string
-    field :password, :string, virtual: true
-    field :password_hash, :string
-    field :phone, :string
-    field :residence_area, :string
+    field(:email, :string)
+    field(:name, :string)
+    field(:password, :string, virtual: true)
+    field(:password_hash, :string)
+    field(:phone, :string)
+    field(:residence_area, :string)
 
     timestamps()
   end
@@ -32,6 +31,7 @@ defmodule Mango.CRM.Customer do
       true ->
         changes = changeset.changes
         put_change(changeset, :password_hash, hashpwsalt(changes.password))
+
       _ ->
         changeset
     end

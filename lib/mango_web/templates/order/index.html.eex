@@ -1,0 +1,22 @@
+<h1>Order View</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Status</th>
+            <th>Products Ordered</th>
+            <th class="text-right">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%= for order <- @orders do %>
+            <tr onclick="window.document.location='<%= order_path(@conn, :show, order.id) %>'" style="cursor: pointer;">
+                <td><%= order.id %></td>
+                <td><%= order.status %></td>
+                <td><%= view_order_items order.line_items %></td>
+                <td class="text-right"><%= order.total %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

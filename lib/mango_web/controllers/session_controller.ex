@@ -4,7 +4,7 @@ defmodule MangoWeb.SessionController do
 
   def new(conn, _params) do
     changeset = CRM.build_customer()
-    render conn, "new.html", changeset: changeset
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"session" => session_params}) do
@@ -15,12 +15,13 @@ defmodule MangoWeb.SessionController do
         |> render("new.html")
 
       customer ->
+        path = get_session(conn, :intending_to_visit) || page_path(conn, :index)
         conn
         |> assign(:current_customer, customer)
         |> put_session(:customer_id, customer.id)
         |> configure_session(renew: true)
         |> put_flash(:info, "Login successful")
-        |> redirect(to: page_path(conn, :index))
+        |> redirect(to: path)
     end
   end
 

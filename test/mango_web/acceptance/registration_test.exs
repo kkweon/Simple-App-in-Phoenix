@@ -11,6 +11,7 @@ defmodule MangoWeb.Acceptance.RegistrationTest do
     navigate_to("/register")
 
     form = find_element(:id, "registration-form")
+
     find_within_element(form, :name, "registration[name]")
     |> fill_field("John")
 

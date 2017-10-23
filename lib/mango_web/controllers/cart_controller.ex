@@ -5,7 +5,7 @@ defmodule MangoWeb.CartController do
   def show(conn, _params) do
     cart = conn.assigns.cart
     cart_changeset = Sales.change_cart(cart)
-    render conn, "show.html", cart: cart, cart_changeset: cart_changeset
+    render(conn, "show.html", cart: cart, cart_changeset: cart_changeset)
   end
 
   @doc """
@@ -13,6 +13,7 @@ defmodule MangoWeb.CartController do
   """
   def add(conn, %{"cart" => cart_params}) do
     cart = conn.assigns.cart
+
     case Sales.add_to_cart(cart, cart_params) do
       {:ok, cart} ->
         render(conn, "add.json", cart: cart, cart_params: cart_params)
@@ -29,15 +30,14 @@ defmodule MangoWeb.CartController do
   """
   def update(conn, %{"order" => cart_params}) do
     cart = conn.assigns.cart
+
     case Sales.update_cart(cart, cart_params) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Cart updated successfully")
         |> redirect(to: cart_path(conn, :show))
+
       {:error, reason} ->
-        IO.puts "=========================="
-        IO.inspect reason
-        IO.puts "=========================="
         conn
         |> put_flash(:info, "Error updating cart")
         |> redirect(to: cart_path(conn, :show))

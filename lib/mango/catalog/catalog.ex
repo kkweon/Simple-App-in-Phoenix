@@ -4,17 +4,17 @@ defmodule Mango.Catalog do
 
   def list_products do
     Product
-    |> Repo.all
+    |> Repo.all()
   end
 
   def list_seasonal_products do
     list_products()
-    |> Enum.filter(fn(product) -> product.is_seasonal end)
+    |> Enum.filter(fn product -> product.is_seasonal end)
   end
 
   def get_category_products(name) do
     list_products()
-    |> Enum.filter(fn(p) -> p.category == name end)
+    |> Enum.filter(fn p -> p.category == name end)
   end
 
   def get_product!(id) do

@@ -11,10 +11,24 @@ defmodule MangoWeb.Acceptance.CatalogPageTest do
     # There are two products
     # - Apple $100, categorized as fruits
     # - Tomato $50, categorized as vegetables
-    tomato = %Product{name: "Tomato", price: 50, sku: "A123", is_seasonal: false, category: "vegetables"}
-    apple = %Product{name: "Apple", price: 100, sku: "B232", is_seasonal: true, category: "fruits"}
-    Repo.insert tomato
-    Repo.insert apple
+    tomato = %Product{
+      name: "Tomato",
+      price: 50,
+      sku: "A123",
+      is_seasonal: false,
+      category: "vegetables"
+    }
+
+    apple = %Product{
+      name: "Apple",
+      price: 100,
+      sku: "B232",
+      is_seasonal: true,
+      category: "fruits"
+    }
+
+    Repo.insert(tomato)
+    Repo.insert(apple)
     :ok
   end
 
@@ -36,7 +50,6 @@ defmodule MangoWeb.Acceptance.CatalogPageTest do
     assert product_price == "100"
 
     refute page_source() =~ "Tomato"
-
   end
 
   test "show vegetables" do
@@ -57,6 +70,5 @@ defmodule MangoWeb.Acceptance.CatalogPageTest do
     assert product_price == "50"
 
     refute page_source() =~ "Apple"
-
   end
 end

@@ -14,7 +14,6 @@
 import "phoenix_html";
 import ajaxCart from "./ajax_cart";
 ajaxCart.init();
-
 // Import local files
 //
 // Local files can be imported directly using relative

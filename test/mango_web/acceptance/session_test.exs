@@ -7,6 +7,7 @@ defmodule MangoWeb.Acceptance.SessionTest do
   setup do
     # GIVEN
     alias Mango.CRM
+
     valid_attrs = %{
       "name" => "John",
       "email" => "john@example.com",
@@ -23,6 +24,7 @@ defmodule MangoWeb.Acceptance.SessionTest do
     navigate_to("/login")
 
     form = find_element(:id, "session-form")
+
     find_within_element(form, :name, "session[email]")
     |> fill_field("john@example.com")
 
@@ -41,6 +43,7 @@ defmodule MangoWeb.Acceptance.SessionTest do
   test "shows an error for invalid credentials" do
     navigate_to("/login")
     form = find_element(:id, "session-form")
+
     find_within_element(form, :name, "session[email]")
     |> fill_field("john@example.com")
 

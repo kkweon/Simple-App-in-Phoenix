@@ -10,12 +10,27 @@ defmodule MangoWeb.HomepageTest do
     # There are two products
     # - Apple $100, categorized as fruits
     # - Tomato $50, categorized as vegetables
-    tomato = %Product{name: "Tomato", price: 50, sku: "A123", is_seasonal: false, category: "vegetables"}
-    apple = %Product{name: "Apple", price: 100, sku: "B232", is_seasonal: true, category: "fruits"}
-    Repo.insert tomato
-    Repo.insert apple
+    tomato = %Product{
+      name: "Tomato",
+      price: 50,
+      sku: "A123",
+      is_seasonal: false,
+      category: "vegetables"
+    }
+
+    apple = %Product{
+      name: "Apple",
+      price: 100,
+      sku: "B232",
+      is_seasonal: true,
+      category: "fruits"
+    }
+
+    Repo.insert(tomato)
+    Repo.insert(apple)
     :ok
   end
+
   test "presence of featured products" do
     # Given
     # There are two products Apple and Tomato priced at 100 and 50 respectively

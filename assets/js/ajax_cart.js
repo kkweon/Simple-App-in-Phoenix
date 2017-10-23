@@ -1,4 +1,14 @@
-/* jshint esversion:6 */
+/**
+ * @fileOverview Ajax Handler
+ * @name ajax_cart.js
+ * @author Kyung Mo Kweon
+ * @license MIT
+ */
+
+/**
+ * Post data and alert the response.message
+ * @param {event} e - Event
+ */
 function ajaxHandler(e) {
     e.preventDefault();
     let post_url = $(this).attr("action");

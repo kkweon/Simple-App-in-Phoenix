@@ -31,7 +31,9 @@ defmodule Mango.CRM do
     cond do
       customer && Comeonin.Bcrypt.checkpw(password, customer.password_hash) ->
         customer
-      true -> :error
+
+      true ->
+        :error
     end
   end
 

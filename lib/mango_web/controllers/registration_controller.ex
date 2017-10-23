@@ -20,6 +20,7 @@ defmodule MangoWeb.RegistrationController do
 
       {:error, changeset} ->
         residence_area = Auroville.ResidenceService.list_areas()
+
         conn
         |> render(:new, changeset: changeset, residence_area: residence_area)
     end

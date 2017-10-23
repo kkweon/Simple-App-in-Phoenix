@@ -3,11 +3,18 @@ defmodule Mango.Sales.Order do
   import Ecto.Changeset
   alias Mango.Sales.{Order, LineItem}
 
-
   schema "orders" do
-    field :status, :string
-    field :total, :decimal
-    embeds_many :line_items, LineItem, on_replace: :delete
+    field(:status, :string)
+    field(:total, :decimal)
+    embeds_many(:line_items, LineItem, on_replace: :delete)
+
+    # newly added fields
+    field(:comments, :string)
+    field(:customer_id, :integer)
+    field(:customer_name, :string)
+    field(:email, :string)
+    field(:residence_area, :string)
+    # up to here
 
     timestamps()
   end
@@ -21,9 +28,15 @@ defmodule Mango.Sales.Order do
     |> validate_required([:status, :total])
   end
 
+  def checkout_changeset(%Order{} = order, attrs) do
+    changeset(order, attrs)
+    |> cast(attrs, [:customer_id, :customer_name, :residence_area, :email, :comments])
+    |> validate_required([:customer_id, :customer_name, :residence_area, :email])
+  end
+
   defp set_order_total(changeset) do
     items = get_field(changeset, :line_items)
-    total = Enum.reduce(items, Decimal.new(0), fn(item, acc) -> Decimal.add(acc, item.total) end)
+    total = Enum.reduce(items, Decimal.new(0), fn item, acc -> Decimal.add(acc, item.total) end)
 
     changeset
     |> put_change(:total, total)
