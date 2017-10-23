@@ -1,0 +1,21 @@
+<div class="product thumbnail">
+    <div class="caption">
+        <span class="text-muted pull-right">
+            <%= @product.pack_size %>
+        </span>
+        <h2>
+            <div class="product-name">
+                <%= @product.name %>
+            </div>
+            <span class="pull-right">
+                <small class="product-price">
+                    <%= @product.price %>
+                </small>
+            </span>
+        </h2>
+        <hr/>
+        <!-- Add to carts -->
+        <%= render "cart_form.html", product: @product, conn: @conn %>
+    </div>
+    <img alt="<%= @product.name %>" src="<%= @product.image %>"/>
+</div>

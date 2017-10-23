@@ -1,6 +1,8 @@
 defmodule MangoWeb.Acceptance.CatalogPageTest do
-  use ExUnit.Case
+  use Mango.DataCase
   use Hound.Helpers
+  alias Mango.Repo
+  alias Mango.Catalog.Product
 
   hound_session()
 
@@ -9,6 +11,10 @@ defmodule MangoWeb.Acceptance.CatalogPageTest do
     # There are two products
     # - Apple $100, categorized as fruits
     # - Tomato $50, categorized as vegetables
+    tomato = %Product{name: "Tomato", price: 50, sku: "A123", is_seasonal: false, category: "vegetables"}
+    apple = %Product{name: "Apple", price: 100, sku: "B232", is_seasonal: true, category: "fruits"}
+    Repo.insert tomato
+    Repo.insert apple
     :ok
   end
 

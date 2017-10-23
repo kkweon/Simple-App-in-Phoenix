@@ -33,6 +33,11 @@ defmodule Mango.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # Password hash
+      {:comeonin, "~> 4.0"},
+      {:bcrypt_elixir, "~> 0.12.0"},
+      # Read CSV
+      {:nimble_csv, "~> 0.1.0"},
       # Acceptance Test Library
       {:hound, "~> 1.0"},
       {:phoenix, "~> 1.3.0"},
