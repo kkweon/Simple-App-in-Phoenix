@@ -6,7 +6,7 @@ defmodule MangoWeb.UserSocket do
   channel("pos", MangoWeb.BotChannel)
 
   ## Transports
-  transport(:websocket, Phoenix.Transports.WebSocket)
+  transport(:websocket, Phoenix.Transports.WebSocket, timeout: 45_000)
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
@@ -21,7 +21,7 @@ defmodule MangoWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"token" => token}, socket) do
-    case Phoenix.Token.verify(socket, "socket_login", token, max_age: 1209600) do
+    case Phoenix.Token.verify(socket, "socket_login", token, max_age: 1_209_600) do
       {:ok, user_id} ->
         socket = assign(socket, :user_id, user_id)
         {:ok, socket}

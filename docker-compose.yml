@@ -2,6 +2,7 @@ version: "3.3"
 services:
   web:
     image: kkweon/phoenix:latest
+    user: "1000"
     ports:
       - "4000:4000"
     environment:
@@ -19,5 +20,13 @@ services:
     image: postgres:10.0
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "80:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "kkweon@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
 volumes:
   db-data:
