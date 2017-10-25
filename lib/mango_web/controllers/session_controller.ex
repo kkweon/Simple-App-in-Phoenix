@@ -16,6 +16,7 @@ defmodule MangoWeb.SessionController do
 
       customer ->
         path = get_session(conn, :intending_to_visit) || page_path(conn, :index)
+
         conn
         |> assign(:current_customer, customer)
         |> put_session(:customer_id, customer.id)

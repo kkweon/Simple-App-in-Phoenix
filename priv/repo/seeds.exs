@@ -10,11 +10,11 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Mango.Repo
+alias Mango.{Repo, Administration}
 alias Mango.Catalog.Product
 alias NimbleCSV.RFC4180, as: CSV
 
-"priv/seed_data/product_list.csv"
+Path.join([:code.priv_dir(:mango), "seed_data", "product_list.csv"])
 |> File.read!()
 |> CSV.parse_string()
 |> Enum.each(fn [_, name, price, sku, is_seasonal, image, pack_size, category] ->
@@ -23,3 +23,8 @@ alias NimbleCSV.RFC4180, as: CSV
   %Product{name: name, price: price, sku: sku, is_seasonal: is_seasonal, image: image, pack_size: pack_size, category: category}
   |> Repo.insert
 end)
+
+
+%{email: "kkweon@gmail.com", name: "Mo Kweon", phone: "1234"}
+|>
+Administration.create_user()

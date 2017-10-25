@@ -1,0 +1,26 @@
+<h2>Orders</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Order Status</th>
+            <th>Order Summary</th>
+            <th>Order Price</th>
+            <th>Order User</th>
+            <th>Order Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%= for order <- @orders do %>
+            <tr onclick="window.document.location='<%= admin_order_path(@conn, :show, order.id) %>'" style="cursor: pointer;">
+                <td><%= order.id %></td>
+                <td><%= order.status %></td>
+                <td><%= MangoWeb.OrderView.view_order_items order.line_items %></td>
+                <td><%= order.total %></td>
+                <td><%= order.customer_id %></td>
+                <td><%= order.inserted_at %></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

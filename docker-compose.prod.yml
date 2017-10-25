@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      DATABASE_URL: "ecto://postgres:postgres@db/mango_prod"
+      SECRET_KEY_BASE: xHoSiGselGI835AfR1JBUfJEExCaSDlnnD7wczV9wBISA20GsdrTPO1ZaroFkV2a
+    depends_on:
+      - db
+    command: "bin/mango migrate && bin/mango start"
+  db:
+    image: postgres:10.0
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:

@@ -8,4 +8,13 @@ defmodule MangoWeb.LayoutView do
     <i class="fa fa-shopping-cart"></i> <span class="cart-count">#{cart_count(conn)}</span>
     """
   end
+
+  @doc """
+  Checks if the locale is `active`
+  """
+  def get_active_locale_class(locale) do
+    if Gettext.get_locale(MangoWeb.Gettext) == locale do
+      "active"
+    end
+  end
 end

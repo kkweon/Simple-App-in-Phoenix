@@ -1,0 +1,6 @@
+FROM kkweon/phoenix:latest
+
+WORKDIR /code
+ADD _build/prod/rel/mango/releases/0.0.1/mango.tar.gz /code/
+
+EXPOSE 4000

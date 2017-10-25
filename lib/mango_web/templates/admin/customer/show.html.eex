@@ -1,0 +1,40 @@
+<h1><%= @customer.name %> Information</h1>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Joined
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <%= @customer.id %>
+            </td>
+            <td>
+                <%= @customer.name %>
+            </td>
+            <td>
+
+                <%= @customer.email %>
+            </td>
+            <td>
+
+                <%= @customer.inserted_at %>
+            </td>
+
+        </tr>
+    </tbody>
+</table>

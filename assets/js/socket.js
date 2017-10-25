@@ -3,9 +3,15 @@
 
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
-import {Socket} from "phoenix"
+import {
+    Socket
+} from "phoenix";
 
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", {
+    params: {
+        token: window.userToken
+    }
+});
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -51,12 +57,65 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect()
+socket.connect();
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("pos", {});
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+    .receive("ok", resp => {
+        console.log("Joined successfully", resp);
+        $("#intro-text").text(resp.message);
+    })
+    .receive("error", resp => {
+        console.log("Unable to join", resp);
+    });
 
-export default socket
+channel.on("message:new", payload => {
+    renderMessage(payload, "MangoRobot");
+});
+
+let chatMessages = $("#pos-chat-room");
+let renderMessage = (payload, user) => {
+    let template = document.createElement("li");
+    template.innerHTML = `
+<div class="chat-body">
+<div class="header">
+<strong class="primary-font">${user}</strong>
+</div>
+<p>${payload.message}</p>
+</div>
+`;
+    chatMessages.append(template);
+    autoScrollChatBox(chatMessages[0]);
+};
+
+let input = $(".chat-input>input");
+input.on("keypress", event => {
+    if (event.keyCode == 13 && input.val()) {
+        let message = input.val();
+        // /status 123
+        let command_regex = /^\/(\w+)\s*([\w\s]*)/g;
+        let parts = command_regex.exec(message);
+
+        renderMessage({
+            message: message
+        }, "You");
+        input.val("");
+
+        // parts[1] = "status", parts[2] = "123"
+        // channel.push(event_name, message)
+        // event ----> bot_channel.ex
+        if (parts) {
+            channel.push(parts[1], {
+                    message: parts[2]
+                }).receive("ok", reply => renderMessage(reply, "Mango"))
+                .receive("error", reply => renderMessage(reply, "Mango"));
+        }
+    }
+});
+
+function autoScrollChatBox(e) {
+    e.scrollTop = e.scrollHeight - e.clientHeight;
+}
+
+export default socket;

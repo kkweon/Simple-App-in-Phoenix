@@ -6,12 +6,13 @@
         <h2>
             <div class="product-name">
                 <%= @product.name %>
+                <span class="pull-right">
+                    $
+                    <span class="product-price">
+                        <%= @product.price %>
+                    </span>
+                </span>
             </div>
-            <span class="pull-right">
-                <small class="product-price">
-                    <%= @product.price %>
-                </small>
-            </span>
         </h2>
         <hr/>
         <!-- Add to carts -->

@@ -16,6 +16,13 @@ defmodule MangoWeb.Router do
   pipeline :frontend do
     plug(MangoWeb.Plugs.LoadCustomer)
     plug(MangoWeb.Plugs.FetchCart)
+    plug(MangoWeb.Plugs.Locale)
+  end
+
+  pipeline :admin do
+    plug(MangoWeb.Plugs.AdminLayout)
+    plug(MangoWeb.Plugs.Admin.LoadAdmin)
+    plug(MangoWeb.Plugs.Admin.AuthenticateAdmin)
   end
 
   # Unauthenticated scope
@@ -33,6 +40,8 @@ defmodule MangoWeb.Router do
     get("/cart", CartController, :show)
     post("/cart", CartController, :add)
     put("/cart", CartController, :update)
+
+    resources("/tickets", TicketController, except: [:edit, :update, :delete])
   end
 
   # Authenticated scope
@@ -45,6 +54,31 @@ defmodule MangoWeb.Router do
 
     get("/orders", OrderController, :index)
     get("/orders/:order_id", OrderController, :show)
+  end
+
+  scope "/admin", MangoWeb.Admin, as: :admin do
+    pipe_through([:browser])
+    get("/login", SessionController, :new)
+    post("/sendlink", SessionController, :send_link)
+    get("/magiclink", SessionController, :create)
+  end
+
+  scope "/admin", MangoWeb.Admin, as: :admin do
+    pipe_through([:browser, :admin])
+
+    resources("/users", UserController)
+    get("/logout", SessionController, :delete)
+
+    get("/orders", OrderController, :index)
+    get("/orders/:id", OrderController, :show)
+
+    get("/customers", CustomerController, :index)
+    get("/customers/:id", CustomerController, :show)
+
+    resources("/warehouse_items", WarehouseItemController)
+    resources("/suppliers", SupplierController)
+
+    get "/", DashboardController, :show
   end
 
   # Other scopes may use custom stacks.

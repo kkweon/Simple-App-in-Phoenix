@@ -19,8 +19,8 @@ defmodule Mango.Sales do
 
   def add_to_cart(%Order{line_items: existing_items} = cart, cart_params) do
     new_item = %{
-      product_id: String.to_integer(cart_params["product_id"]),
-      quantity: String.to_integer(cart_params["quantity"])
+      product_id: String.to_integer(cart_params["product_id"] || cart_params[:product_id]),
+      quantity: String.to_integer(cart_params["quantity"] || cart_params[:quantity])
     }
 
     existing_items = existing_items |> Enum.map(&Map.from_struct/1)
@@ -70,6 +70,16 @@ defmodule Mango.Sales do
   end
 
   def get_order(id) do
-    Repo.get!(Order, id)
+    Repo.get(Order, id)
+  end
+
+  def list_orders do
+    Repo.all(Order)
+  end
+
+  def pos_sale_complete(%Order{} = order) do
+    order
+    |> Order.changeset(%{"status" => "POS Sale"})
+    |> Repo.update()
   end
 end

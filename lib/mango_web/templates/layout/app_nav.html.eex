@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" datatoggle="collapse" data-target="#primary-nav">
                 <span class="sr-only">Toggle navigation</span>
@@ -31,6 +31,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <%= link "My orders", to: order_path(@conn, :index) %>
+                            </li>
+                            <li>
                                <%= link "Logout", to: session_path(@conn, :delete) %>
                             </li>
                         </ul>
@@ -43,6 +46,21 @@
                         <%= link "Login", to: session_path(@conn, :new), class: "nav-link" %>
                     </li>
                 <% end %>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-globe"></i> I18n <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="<%= get_active_locale_class("en") %>">
+                            <a href="?locale=en">English</a>
+                        </li>
+
+                        <li class="<%= get_active_locale_class("ko_kr") %>">
+                            <a href="?locale=ko_kr">Korean</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

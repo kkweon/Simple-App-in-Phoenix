@@ -1,0 +1,22 @@
+<script type="text/javascript">
+ window.userToken = "<%= @token %>";
+</script>
+
+<div class="chat-box col-md-8 col-md-offset-2">
+    <h3>Mango Robot Assistant</h3>
+    <ul id="pos-chat-room" class="chat">
+        <li>
+            <div class="chat-body">
+                <p id="intro-text">
+                    Waiting for connection...
+                </p>
+            </div>
+        </li>
+    </ul>
+    <div class="input-group chat-input">
+        <input id="btn-input" class="form-control" name="chat-input-box" type="text" placeholder="Type your message" />
+        <span class="input-group-btn">
+            <button id="btn-chat" class="btn btn-primary">Send</button>
+        </span>
+    </div>
+</div>

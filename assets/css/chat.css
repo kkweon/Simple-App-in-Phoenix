@@ -1,21 +1,30 @@
 @media  (min-width: 992px) {
     .chat-box {
-        position: fixed;
-        width: 33.3%;
+        position: relative;
         margin-left: -30px;
-        background: rgba(128, 128, 128, 0.08);
+        background: rgba(128, 128, 128, 0.02);
         padding-left: 15px;
+        height: 550px;
     }
 }
-.chat-input {
-    margin: 15px 10px 10px 0;
+
+div.chat-input {
+    position: absolute;
+    bottom: 2%;
+    left: 0%;
+    margin: 0 2% 0 2%;
 }
+
+#pos-chat-room {
+    height: 77%;
+}
+
+
 .chat
 {
     list-style: none;
     margin: 0;
     padding: 0 10px 0 0;
-    max-height: 250px;
     overflow-y: scroll;
     border-bottom: 1px solid gray;
 }
@@ -30,4 +39,8 @@
 {
     margin: 0;
     color: #777777;
+}
+
+.chat-body > div {
+    margin-bottom: 1%;
 }
