@@ -2,7 +2,6 @@ version: "3.3"
 services:
   web:
     image: kkweon/phoenix:latest
-    user: "1000"
     ports:
       - "4000:4000"
     environment:

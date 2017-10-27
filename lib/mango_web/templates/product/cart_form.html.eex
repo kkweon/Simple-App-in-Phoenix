@@ -7,7 +7,7 @@
         <div class="input-group-addon">
             Qty
         </div>
-        <%= number_input f, :quantity, value: 1, class: "form-control", style: "width: 70%" %>
+        <%= number_input f, :quantity, value: 1, class: "form-control", style: "width: 40%" %>
         <%= error_tag f, :quantity %>
     </div>
 </div>
