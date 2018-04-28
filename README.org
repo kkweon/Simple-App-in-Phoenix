@@ -1,4 +1,7 @@
 * Phoenix Basic CRUD Application                                   :TOC_3_GH:
+
+  #+ATTR_HTML: title="Greenkeeper badge"
+  [[https://greenkeeper.io/][file:https://badges.greenkeeper.io/kkweon/Simple-App-in-Phoenix.svg]]
   - [[#basic-phoenix-workflow][Basic Phoenix Workflow]]
     - [[#migrations][Migrations]]
     - [[#model][Model]]
